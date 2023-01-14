@@ -9,6 +9,7 @@ class StudentInLine(admin.TabularInline):
     model = Course.students.through
     extra = 1
 
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', ]

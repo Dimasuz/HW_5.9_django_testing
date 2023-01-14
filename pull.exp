@@ -1,0 +1,5 @@
+#!/bin/bash/expect
+spawn /home/dddd/django_cicd/pull.sh  # уточнить путь
+expect "password"
+send -- "123/r/n"
+expect eof

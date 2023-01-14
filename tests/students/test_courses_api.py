@@ -14,6 +14,7 @@ from students.models import Course, Student
 def client():
     return APIClient()
 
+
 # фикстура для фабрики курсов
 @pytest.fixture
 def courses_factory():
@@ -22,6 +23,7 @@ def courses_factory():
         return baker.make(Course, *args, **kwargs)
     return factory
 
+
 # фикстура для фабрики студентов
 @pytest.fixture
 def students_factory():
@@ -29,10 +31,12 @@ def students_factory():
         return baker.make(Student, *args, **kwargs)
     return factory
 
-#фикстура максимального количества студентов
+
+# фикстура максимального количества студентов
 @pytest.fixture
 def max_student_in_settings(settings):
     return settings.MAX_STUDENTS_PER_COURSE
+
 
 # проверка получения одного курса (retrieve-логика)
 # создаем курс через фабрику
@@ -55,7 +59,8 @@ def test_get_firstcourse(client, courses_factory):
 
 
 # проверка получения списка курсов (list-логика)
-# аналогично – сначала вызываем фабрики, затем делаем запрос и проверяем результат
+# аналогично – сначала вызываем фабрики,
+# затем делаем запрос и проверяем результат
 @pytest.mark.django_db
 def test_get_list(client, courses_factory):
 
@@ -75,7 +80,8 @@ def test_get_list(client, courses_factory):
 
 
 # проверка фильтрации списка курсов по id
-# создаем курсы через фабрику, передать id одного курса в фильтр, проверить результат запроса с фильтром
+# создаем курсы через фабрику, передать id одного курса в фильтр,
+# проверить результат запроса с фильтром
 @pytest.mark.django_db
 def test_get_filtr_id(client, courses_factory):
 
@@ -110,8 +116,8 @@ def test_get_filtr_name(client, courses_factory):
     assert data[0]['id'] == courses[1].id
 
 
-#тест успешного создания курса
-#здесь фабрика не нужна, готовим JSON-данные и создаем курс
+# тест успешного создания курса
+# здесь фабрика не нужна, готовим JSON-данные и создаем курс
 @pytest.mark.django_db
 def test_create_course(client, students_factory):
     # Arrange
@@ -139,8 +145,9 @@ def test_update_course(client, courses_factory, students_factory):
 
     # Act
     url = f'/api/v1/courses/{courses.id}/'
-    students_list = [students[2].id, students[0].id, students[1].id, students[4].id]
-    data = {'name': name, 'students': students_list,}
+    students_list = [students[2].id, students[0].id,
+                     students[1].id, students[4].id, ]
+    data = {'name': name, 'students': students_list, }
     resp = client.put(url, data=data)
     url = '/api/v1/courses/'
     data = {'id': courses.id}
@@ -174,10 +181,13 @@ def test_delete_course(client, courses_factory):
 
 # дополниетльное задание
 
+
 # тест обновления курса с ограничением по количеству студентов
 @pytest.mark.django_db
-@pytest.mark.parametrize("num_student,status",[(-1, 200), (1, 400)],)
-def test_update_course_maxstudent(client, max_student_in_settings, courses_factory, students_factory, num_student, status):
+@pytest.mark.parametrize("num_student,status", [(-1, 200), (1, 400)], )
+def test_update_course_maxstudent(client, max_student_in_settings,
+                                  courses_factory, students_factory,
+                                  num_student, status):
     # Arrange
     num_student += max_student_in_settings
     courses = courses_factory()
@@ -187,24 +197,27 @@ def test_update_course_maxstudent(client, max_student_in_settings, courses_facto
     # Act
     url = f'/api/v1/courses/{courses.id}/'
     students_list = [students[i].id for i in range(num_student)]
-    data = {'name': courses.name, 'students': students_list,}
+    data = {'name': courses.name, 'students': students_list, }
     resp = client.put(url, data=data)
 
     # Assert
     assert resp.status_code == status
 
 
-#тест создания курса с ограничением по количеству студентов на курсе
+# тест создания курса с ограничением по количеству студентов на курсе
 @pytest.mark.django_db
-@pytest.mark.parametrize("num_student,status,added",[(-1, 201, 1), (1, 400, 0)],)
-def test_create_course_maxstudent(client, max_student_in_settings, students_factory, num_student, status, added):
+@pytest.mark.parametrize("num_student,status,added", [(-1, 201, 1),
+                                                      (1, 400, 0)], )
+def test_create_course_maxstudent(client, max_student_in_settings,
+                                  students_factory, num_student,
+                                  status, added):
     # Arrange
     num_student += max_student_in_settings
     count = Course.objects.count()
     students = students_factory(_quantity=num_student)
     students_list = [students[i].id for i in range(num_student)]
     url = '/api/v1/courses/'
-    data = {'name': 'test_name_course', 'students': students_list,}
+    data = {'name': 'test_name_course', 'students': students_list, }
 
     # Act
     response = client.post(url, data=data)
@@ -212,6 +225,3 @@ def test_create_course_maxstudent(client, max_student_in_settings, students_fact
     # Assert
     assert response.status_code == status
     assert Course.objects.count() == count + added
-
-
-

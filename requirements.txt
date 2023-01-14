@@ -1,3 +1,7 @@
 django
 djangorestframework
 django-filter
+gunicorn
+psycopg2-binary
+python-dotenv
+flake8

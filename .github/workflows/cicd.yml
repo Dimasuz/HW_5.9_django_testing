@@ -1,0 +1,72 @@
+name: Django Testing and Deploy
+
+on:
+  push:
+    branches: [cicd]
+
+jobs:
+
+  tests:
+    runs-on: ubuntu-20.04
+    env:
+      POSTGREG_USER: ${{ secrets.DB_USER }}
+      POSTGREG_PASS: ${{ secrets.DB_PASS }}
+      POSTGREG_HOST: ${{ secrets.DB_HOST }}
+      POSTGREG_PORT: ${{ secrets.DB_PORT }}
+      POSTGREG_DB: ${{ secrets.DB_DBNM }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+      DEBUG: "1"
+
+    services:
+      postgres_main:
+        image: postgres:12
+        env:
+          POSTGRES_USER: ${{ env.POSTGREG_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGREG_PASS }}
+          POSTGRES_DB: ${{ env.POSTGREG_DB }}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: flake8 . --exclude=students/migrations
+
+      - name: Test with pytest
+        run: python manage.py test
+        env:
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          DEBUG: ${{ env.DEBUG }}
+          ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS }}
+          DB_NAME: ${{ env.POSTGREG_DB }}
+          DB_USER: ${{ env.POSTGREG_USER }}
+          DB_PASSWORD: ${{ env.POSTGREG_PASS }}
+          DB_HOST: ${{ env.POSTGREG_HOST }}
+          DB_PORT: ${{ env.POSTGREG_PORT }}
+
+#      - name: Deploy
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          script: expect /home/dddd/url_shortener/pull.exp     # уточнить путь

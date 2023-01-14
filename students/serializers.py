@@ -12,8 +12,8 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "students")
 
     def validate(self, attrs):
-        num_students = len(attrs.get('students')) if attrs.get('students') else 0
+        num_students = len(attrs.get('students')) \
+            if attrs.get('students') else 0
         if num_students > MAX_STUDENTS_PER_COURSE:
             raise ValidationError('Превышено количество студентов на курсе')
         return attrs
-
