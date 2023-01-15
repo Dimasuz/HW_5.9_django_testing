@@ -52,7 +52,7 @@ jobs:
         run: flake8 . --exclude=students/migrations
 
       - name: Test with pytest
-        run: python manage.py test
+        run: pytest tests
         env:
           SECRET_KEY: ${{ env.SECRET_KEY }}
           DEBUG: ${{ env.DEBUG }}
