@@ -7,12 +7,14 @@ from students.models import Course
 from students.serializers import CourseSerializer
 from django.views import View
 
+
 class CoursesViewSet(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     filter_backends = (DjangoFilterBackend, )
     filterset_class = CourseFilter
+
 
 class MyView(View):
 
