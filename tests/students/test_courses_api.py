@@ -225,3 +225,17 @@ def test_create_course_maxstudent(client, max_student_in_settings,
     # Assert
     assert response.status_code == status
     assert Course.objects.count() == count + added
+
+
+@pytest.mark.django_db
+def test_get_firstpage(client):
+
+    # Arrange
+    url = '/'
+
+    # Act
+    response = client.get(url)
+
+    # Assert
+    assert response.status_code == 200
+    assert response.content == b'Hello, from app - Students!'
