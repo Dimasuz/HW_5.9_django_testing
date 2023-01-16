@@ -69,4 +69,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: /home/user1/HW_6.6/pull.sh
+          script: git pull origin cicd && sudo systemctl restart gunicorn
