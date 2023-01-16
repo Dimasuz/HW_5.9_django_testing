@@ -238,4 +238,4 @@ def test_get_firstpage(client):
 
     # Assert
     assert response.status_code == 200
-    assert response.content == b'Hello, from app - Students1!'
+    assert response.content == b'Hello, from app - Students3!'

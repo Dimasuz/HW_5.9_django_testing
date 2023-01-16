@@ -5,4 +5,3 @@ gunicorn
 psycopg2-binary
 python-dotenv
 flake8
-expect

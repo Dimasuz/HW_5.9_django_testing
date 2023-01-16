@@ -19,4 +19,4 @@ class CoursesViewSet(ModelViewSet):
 class MyView(View):
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse('Hello, from app - Students1!')
+        return HttpResponse('Hello, from app - Students3!')
