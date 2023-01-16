@@ -69,4 +69,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: expect /home/user1/HW_6.6/pull.exp
+          script: /home/user1/HW_6.6/pull.sh
