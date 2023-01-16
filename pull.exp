@@ -1,5 +1,5 @@
 #!/bin/bash/expect
-spawn /home/dddd/django_cicd/pull.sh  # уточнить путь
+spawn /home/user1/HW_6.6/pull.sh
 expect "password"
 send -- "123/r/n"
 expect eof

@@ -63,10 +63,10 @@ jobs:
           DB_HOST: ${{ env.POSTGREG_HOST }}
           DB_PORT: ${{ env.POSTGREG_PORT }}
 
-#      - name: Deploy
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          password: ${{ secrets.PASSWORD }}
-#          script: expect /home/dddd/url_shortener/pull.exp     # уточнить путь
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: expect /home/user1/HW_6.6/pull.exp

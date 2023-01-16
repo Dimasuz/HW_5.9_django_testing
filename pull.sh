@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/dddd/django_cicd   # уточнить путь
+cd /home/user1/HW_6.6
 git pull origin cicd
 sudo systemctl restart gunicorn
